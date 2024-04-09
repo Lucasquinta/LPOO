@@ -1,33 +1,3 @@
-/* el problema se debe a la declaración de variables dentro de un case. Si quieres declarar variables en un case tienes que usar las llaves {} para asegurar que el alcance (scope)
-de estas variables se limita a ese case. Por ejemplo:
-
-switch(op)
-{
-    case 1: 
-    {
-       string frase;
-       foo();
-    }
-    break;
-    case 2: 
-    {
-       bar();
-    }
-    break;
-    case 3: 
-    {
-       exit();
-    }
-    break;
-}    
-Por tanto, puedes elegir 2 opciones:
-
-1) Usar llaves {} en los case donde declares variables (o en todos).
-2) Declarar las variables fuera del switch.
-Se recomienda la opción 1, ya que te permite tener el código más limpio y estructurado.
-*/
-
-
 #include <stdio.h>
 main()
 {
@@ -35,30 +5,30 @@ main()
 	printf("Que punto quiere realizar? \n(1/2/3/4/5): ");
 	scanf("%d", & punto);
 	switch(punto){
-		case 1:
-	float n_alum, precio, p_alum;
-	printf("ingrese la cantidad de alumnos que viajan.");
-	scanf("%f", & n_alum);
-	if(n_alum>=100){
-		precio= n_alum * 500;
-		p_alum=500;
-	}
-	else if(n_alum>=50 && n_alum<=99){
-		precio= n_alum * 400;
-		p_alum=400;
-	}
-	else if(n_alum>=30 && n_alum<=49){
-		precio= n_alum * 300;
-		p_alum=300;
-	}
-	else if(n_alum<30){
-		precio= 6000;
-		p_alum= precio/n_alum;
-	}
-	printf("El valor total del micro es de %f y por alumno tienen que pagar %f cada uno", precio, p_alum);
-	break;
-	
-	case 2:
+	case 1:{
+		float n_alum, precio, p_alum;
+		printf("ingrese la cantidad de alumnos que viajan.");
+		scanf("%f", & n_alum);
+		if(n_alum>=100){
+			precio= n_alum * 500;
+			p_alum=500;
+		}
+		else if(n_alum>=50 && n_alum<=99){
+			precio= n_alum * 400;
+			p_alum=400;
+		}
+		else if(n_alum>=30 && n_alum<=49){
+			precio= n_alum * 300;
+			p_alum=300;
+		}
+		else if(n_alum<30){
+			precio= 6000;
+			p_alum= precio/n_alum;
+		}
+		printf("El valor total del micro es de %f y por alumno tienen que pagar %f cada uno", precio, p_alum);
+		break;
+		}
+	case 2:{
 		float sueldo, ventas[3], com, total;
 		int i, acumc=0, acum=0;
 		printf("ingrese su sueldo base: ");
@@ -73,8 +43,8 @@ main()
 		total= sueldo+acum+acumc;
 		printf("El sueldo total es de %f", total);
 		break;
-		
-	case 3:
+		}
+	case 3:{
 		float parcial, acum2, exf, trf,prom, final;
 		int j;
 		for(j=0; j<3; j++){
@@ -90,7 +60,8 @@ main()
 		final= (prom*0.55) + (exf*0.30) + (trf*0.15);
 		printf("La nota final es de %f", final);
 		break;
-	case 4:
+		}
+	case 4:{
 		int n1,i,par,n, n2, cont=0;
 		
 		printf("ingrese un numero de valor minimo: ");
@@ -106,9 +77,10 @@ main()
 			}
 		}
 		break;
-	case 5:
-		
+		}
+	case 5:{
 		printf("se cruzan en el kilometro 110.");
 		break;
+		}
 	}
 }
