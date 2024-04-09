@@ -1,3 +1,33 @@
+/* el problema se debe a la declaración de variables dentro de un case. Si quieres declarar variables en un case tienes que usar las llaves {} para asegurar que el alcance (scope)
+de estas variables se limita a ese case. Por ejemplo:
+
+switch(op)
+{
+    case 1: 
+    {
+       string frase;
+       foo();
+    }
+    break;
+    case 2: 
+    {
+       bar();
+    }
+    break;
+    case 3: 
+    {
+       exit();
+    }
+    break;
+}    
+Por tanto, puedes elegir 2 opciones:
+
+1) Usar llaves {} en los case donde declares variables (o en todos).
+2) Declarar las variables fuera del switch.
+Se recomienda la opción 1, ya que te permite tener el código más limpio y estructurado.
+*/
+
+
 #include <stdio.h>
 main()
 {
