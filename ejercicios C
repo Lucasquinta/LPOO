@@ -1,0 +1,24 @@
+/*punto 1*/
+#include <stdio.h>
+main()
+{
+	int x1=1, x2=2, x3=3, xt;
+	int salida = 0;
+	
+	do{
+		
+		xt=x1+x2+x3;
+		
+		if(xt==87){
+			salida=1;
+			break;
+		}
+		x1++;
+		x2++;
+		x3++;
+		
+	}while(1);
+	printf("los numeros son %d, %d y %d.", x1, x2, x3);
+	
+}
+/*punto 2*/
