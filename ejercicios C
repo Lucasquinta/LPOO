@@ -79,3 +79,23 @@ main()
 	}
 }
 /*punto 5*/
+#include <stdio.h>
+main()
+{
+	int nota;
+	printf("Ingrese su nota:");
+	scanf("%d", & nota);
+	if(nota>=6){
+		printf("Aprobado ");
+	}
+	else{
+		printf("Reprobado ");
+	}
+	if(nota>=8){
+		printf("felicitaciones.");
+	}	
+	else if(nota==1){
+		printf("debes esforzarte mas.");
+	}
+}
+/*punto6*/
