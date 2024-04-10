@@ -57,3 +57,25 @@ main()
 	printf("FIN");
 }
 /*punto 4*/
+#include <stdio.h>
+main()
+{
+	float prueba, tarea, final, acum=0, total;
+	int i, n=4;
+	for(i=0; i<n; i++){
+		printf("Ingrese la nota de la prueba N %d: ", i+1);
+		scanf("%f", & prueba);
+		acum=acum+ prueba;
+	}
+	printf("Ingrese la nota de tarea: ");
+	scanf("%f", & tarea);
+	total= acum+tarea;
+	final= total/5;
+	if(final>=6){
+		printf("La nota final es de %f, usted esta aprobado :)", final);
+	}
+	else{
+		printf("La nota final es de %f, usted esta desaprobado :(", final);
+	}
+}
+/*punto 5*/
