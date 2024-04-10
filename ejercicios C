@@ -37,3 +37,23 @@ main()
 	printf("el promedio de los 3 numeros es %f", prom);
 }
 /*punto 3*/
+#include <stdio.h>
+main()
+{
+	int N, par, seg;
+	do{
+	printf("Ingrese un numero: ");
+	scanf("%d", & N);
+	par=N%2;
+	if(par==0){
+		printf("El numro es par.\n");
+	}
+	else{
+		printf("El numero es impar.\n");
+	}
+	printf("Desea ingresar otro numero? \n 1=si / 2=no: ");
+	scanf("%d", & seg);
+	}while(seg<2);
+	printf("FIN");
+}
+/*punto 4*/
