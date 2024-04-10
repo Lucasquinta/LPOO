@@ -99,3 +99,36 @@ main()
 	}
 }
 /*punto6*/
+#include <stdio.h>
+main()
+{
+	float alq, sueldo, impuesto, total;
+	printf("Ingrese su alquiler: ");
+	scanf("%f", & alq);
+	printf("Ingrese su sueldo: ");
+	scanf("%f", & sueldo);
+	if(sueldo<=202){
+		printf("Se paga %f de alquiler, no hay impuesto.", alq);
+	}
+	else if(sueldo>202 && sueldo<=607){
+		impuesto= alq*0.05;
+		total=impuesto+alq;
+		printf("Se paga %f de alquiler, el impuesto es de 5%.", total);
+	}
+	else if(sueldo>607 && sueldo<=1013){
+		impuesto= alq*0.1;
+		total=impuesto+alq;
+		printf("Se paga %f de alquiler, el impuesto es de 10%.", total);
+	}
+	else if(sueldo>1013 && sueldo<=1418){
+		impuesto= alq*0.15;
+		total=impuesto+alq;
+		printf("Se paga %f de alquiler, el impuesto es de 15%.", total);
+	}
+	else if(sueldo>1418){
+		impuesto= alq*0.25;
+		total=impuesto+alq;
+		printf("Se paga %f de alquiler, el impuesto es de 25%.", total);
+	}
+}
+/*punto 7*/
