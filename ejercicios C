@@ -22,3 +22,18 @@ main()
 	
 }
 /*punto 2*/
+#include <stdio.h>
+main()
+{
+	float n, acum, prom;
+	int cont=0;
+	do{
+		printf("ingrese un numero: ");
+		scanf("%f", & n);
+		acum=acum+n;
+		cont= cont +1;
+	}while(cont<3);
+	prom=acum/3;
+	printf("el promedio de los 3 numeros es %f", prom);
+}
+/*punto 3*/
