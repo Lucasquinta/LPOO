@@ -15,7 +15,7 @@ main()
 			printf("Ingrese que tipo de uva desea cotizar \n tipo A=1 / tipo B=2 : ");
 			scanf("%f", & tipo);
 			
-			printf("Ingrese que tamanio de uva desea cotizar \n tamanio 1 / tamaño 2 : ");
+			printf("Ingrese que tamanio de uva desea cotizar \n tamanio 1 / tamaÃ±o 2 : ");
 			scanf("%f", & tamanio);
 			
 			if(tipo == 1){
@@ -84,6 +84,69 @@ main()
 		printf("La longitud de la circunferencia es de %f \n", L);
 		printf("El area de la circunferencia es de %f \n", A);
 		printf("El volumen de las esfera es de %f", V);
+		break;
+	}
+	case 4:{
+		int g, e, a;
+		printf("Ingrese su genero \n (hombre=1 / mujer=2): ");
+		scanf("%d", & g);
+		printf("Ingrese su edad: ");
+		scanf("%d", & e);
+		printf("Ingrese sus anios de aporte: ");
+		scanf("%d", & a);
+		if(g==1){
+			if(e>65 && a>20){
+				printf("Usted esta apto para jubilarse.");
+			}
+			else{
+				printf("Usted no esta apto para jubilarse.");
+			}
+		}
+		else if(g==2){
+			if(e>60 && a>20){
+				printf("Usted esta apta para jubilarse.");
+			}
+			else{
+				printf("Usted no esta apta para jubilarse.");
+			}
+		}
+		break;
+	}
+	case 5:{
+		int h, edad, cont, i, sub, ad, total;
+		printf("Ingrese cuantos hijos tiene: ");
+		scanf("%d", & h);
+		for(i=0; i<h; i++){
+			printf("Ingrese la edad del hijo N %d : ", i+1);
+			scanf("%d", & edad);
+			if(edad>=6 && edad<=18){
+				cont= cont+1;
+			}
+		}
+		if(h<=2){
+			sub= 700*h;
+			ad=1000*cont;
+			total= sub+ad;
+			printf("El subcidio es de %d. \n", sub);
+			printf("El adicional por edad escolar es de %d. \n", ad);
+			printf("El total es de %d. \n", total);
+		}
+		else if(h>=3 && h<=5){
+			sub= 800*h;
+			ad=1000*cont;
+			total= sub+ad;
+			printf("El subcidio es de %d. \n", sub);
+			printf("El adicional por edad escolar es de %d. \n", ad);
+			printf("El total es de %d. \n", total);
+		}
+		else if(h>5){
+			sub= 1200*h;
+			ad=1000*cont;
+			total= sub+ad;
+			printf("El subcidio es de %d. \n", sub);
+			printf("El adicional por edad escolar es de %d. \n", ad);
+			printf("El total es de %d. \n", total);
+		}
 		break;
 	}
 	}
