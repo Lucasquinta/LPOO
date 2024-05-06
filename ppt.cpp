@@ -3,7 +3,7 @@
 #include <time.h>
 
 int main() {
-    int usuario, maquina, i, j, n=5, m=3, yo, el, us, riv, emp;
+    int usuario, maquina, i, j, n=5, m=3, yo, el, us, riv=0, emp;
     srand(time(NULL));  
     
     for(i=0; i<n; i++){
@@ -35,7 +35,7 @@ int main() {
 		if(yo>el){
 			us= us+1;
 		}else if(el>yo){
-			riv= riv+1;
+			riv +=1;
 		}else{
 			emp= emp+1;
 		}
@@ -50,5 +50,6 @@ int main() {
 			printf("Perdiste la partida ;(\n\n ");
 			break;
 		}
-	}	
+	}
+	printf("Empate.");	
 }
