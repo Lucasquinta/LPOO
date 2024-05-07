@@ -3,9 +3,11 @@
 #include <time.h>
 
 int main() {
-    int usuario, maquina, i, j, n=5, m=3, yo, el, us, riv=0, emp;
+    int usuario, maquina, i, j, n=5, m=3, yo, el, us, riv=0, jug, emp;
     srand(time(NULL));  
-    
+    do{
+    us=0;
+    riv=0;
     for(i=0; i<n; i++){
     	for(j=0; j<m; j++){
 
@@ -43,13 +45,23 @@ int main() {
 		yo=0;
 		el=0;
 		printf("Termino la ronda N %d \n", i+1);
-		if(us==3){
-			printf("¡Ganaste la partida! :P\n\n");
+			if(us==3){
 			break;
 		}else if(riv==3){
-			printf("Perdiste la partida ;(\n\n ");
 			break;
 		}
+	
 	}
-	printf("Empate.");	
+		if(us>riv){
+			printf("¡Ganaste la partida! :P\n\n");
+		}else if(riv>us){
+			printf("Perdiste la partida ;(\n\n ");
+		}
+	if(us==riv){
+	printf("Empate.");
+	}
+	printf("\ndesea volver a jugar? \n1=si 2=no: ");
+	scanf("%d", & jug);
+}while (jug==1);
+ printf("FIN");
 }
