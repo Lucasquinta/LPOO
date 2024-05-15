@@ -1,0 +1,193 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define N_MAX 20
+
+char tablero[N_MAX][N_MAX];
+int filas = 0, columnas = 0;
+int x_pirata, y_pirata, x_tesoro, y_tesoro;
+
+void inicializarTablero();
+void dibujarTablero();
+void BuscarTesoro();
+int generarNumeroAleatorio(int min, int max);
+
+int main() {
+    srand(time(NULL));  // Inicializar generador de números aleatorios
+    
+    int opcion;
+    char jugar_nuevamente;
+    
+    do {
+        printf("\n--- Menú ---\n");//Interfaz
+        printf("1. Inicializar Tablero\n");
+        printf("2. Dibujar Tablero\n");
+        printf("3. Buscar Tesoro\n");
+        printf("4. Salir\n");
+        printf("Ingrese una opcion: ");
+        scanf("%d", &opcion);
+        
+        switch (opcion) {
+            case 1:
+            	printf("Teniendo en cuenta que el agua te va a sacar 2 filas y 2 columnas\n");
+                printf("Ingrese las dimensiones del tablero (maximo %d): ", N_MAX);
+                scanf("%d", &filas);
+                columnas = filas;
+                inicializarTablero();
+                printf("Tablero inicializado.\n");
+                break;
+            case 2:
+                dibujarTablero();
+                break;
+            case 3:
+                BuscarTesoro();
+                break;
+            case 4:
+                printf("Saliendo del programa.\n");
+                break;
+            default:
+                printf("Opción inválida. Intente nuevamente.\n");
+                break;
+        }
+        
+        if (opcion == 3 && tablero[x_pirata][y_pirata] == 'T') {
+            printf("¡Encontraste el Gran Tesoro!\n");
+            printf("¿Desea jugar nuevamente? (s/n): ");
+            scanf(" %c", &jugar_nuevamente);
+            if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
+                inicializarTablero(); // Reiniciar el juego
+                opcion = 0; // Reiniciar el menú
+            }
+        }
+    } while (opcion != 4);
+    
+    return 0;
+}
+
+void inicializarTablero() {
+    int i, j;
+    
+    if (filas <= 4 || filas > N_MAX || columnas <= 4 || columnas > N_MAX) {
+        printf("Dimensiones inválidas. Deben ser mayores que 4 y menores o iguales a %d.\n", N_MAX);
+        return;
+    }
+    
+    // Rellenar el tablero con agua
+    for (i = 0; i < filas; i++) {
+        for (j = 0; j < columnas; j++) {
+            if (i == 0 || j == 0 || i == filas - 1 || j == columnas - 1) {
+                tablero[i][j] = '~';  // Agua en los bordes
+            } else {
+                tablero[i][j] = ' ';  // Espacio vacío en el interior
+            }
+        }
+    }
+    
+    // Colocar puentes en las esquinas
+    tablero[0][columnas - 1] = 'O';
+    tablero[filas - 1][0] = 'O';
+    
+    // Colocar al pirata y al tesoro en casillas aleatorias
+    x_pirata = generarNumeroAleatorio(1, filas - 2);
+    y_pirata = generarNumeroAleatorio(1, columnas - 2);
+    tablero[x_pirata][y_pirata] = 'P';
+    
+    do {
+        x_tesoro = generarNumeroAleatorio(1, filas - 2);
+        y_tesoro = generarNumeroAleatorio(1, columnas - 2);
+    } while (x_tesoro == x_pirata && y_tesoro == y_pirata);
+}
+
+void dibujarTablero() {
+    int i, j;
+    printf("\nGuia del juego:\nEl agua es ~ y el puente es O\n");
+    if (filas <= 0 || filas > N_MAX || columnas <= 0 || columnas > N_MAX) {
+        printf("El tablero no ha sido inicializado correctamente.\n");
+        return;
+    }
+
+    
+    for (i = 0; i < filas; i++) {
+        for (j = 0; j < columnas; j++) {
+            if (i == x_tesoro && j == y_tesoro) {
+                printf("  "); // No mostrar la ubicación del tesoro
+            } else {
+                printf("%c ", tablero[i][j]);
+            }
+        }
+        printf("\n");
+    }
+}
+
+void BuscarTesoro() {
+    int movimiento = 0;
+    char direccion;
+    
+    if (filas <= 0 || filas > N_MAX || columnas <= 0 || columnas > N_MAX) {
+        printf("El tablero no ha sido inicializado correctamente.\n");
+        return;
+    }
+    
+    do {
+        printf("Ingrese la dirección (w, a, s, d): ");
+        scanf(" %c", &direccion);
+        
+        int dx = 0, dy = 0;
+        
+        switch (direccion) {
+            case 'a':
+                dy = -1;
+                break;
+            case 'd':
+                dy = 1;
+                break;
+            case 's':
+                dx = 1;
+                break;
+            case 'w':
+                dx = -1;
+                break;
+            default:
+                printf("Dirección inválida. Intente nuevamente.\n");
+                continue;
+        }
+        
+        // Verificar si el movimiento es válido
+        int nueva_x = x_pirata + dx;
+        int nueva_y = y_pirata + dy;
+        if (nueva_x >= 0 && nueva_x < filas && nueva_y >= 0 && nueva_y < columnas) {
+            // Limpiar la posición anterior del pirata
+            tablero[x_pirata][y_pirata] = 'X';
+            // Mover el pirata a la nueva posición
+            x_pirata = nueva_x;
+            y_pirata = nueva_y;
+            tablero[x_pirata][y_pirata] = 'P';
+        } else {
+            printf("Movimiento inválido. Intente nuevamente.\n");
+            continue;
+        }
+        
+        dibujarTablero();
+        
+        movimiento++;
+        
+        if (tablero[x_pirata][y_pirata] == 'T') {
+            printf("¡Encontraste el Gran Tesoro!\n");
+            break;
+        } else if (tablero[x_pirata][y_pirata] == 'P' && x_pirata == x_tesoro && y_pirata == y_tesoro) {
+            printf("¡Has encontrado el tesoro!\n");
+            break;
+        }
+        
+        if (movimiento >= 50) {
+            printf("Has alcanzado el límite de movimientos. No has encontrado el tesoro.\n");
+            break;
+        }
+        
+    } while (1);
+}
+
+int generarNumeroAleatorio(int min, int max) {
+    return min + rand() % (max - min + 1);
+}
