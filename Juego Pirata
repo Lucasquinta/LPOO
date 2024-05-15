@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
+#define celeste "\033[0;36m"
+#define amarillo "\033[0;33m"
+#define rojo "\033[0;31m"
 #define N_MAX 20
 
 char tablero[N_MAX][N_MAX];
@@ -77,6 +79,7 @@ void inicializarTablero() {
     for (i = 0; i < filas; i++) {
         for (j = 0; j < columnas; j++) {
             if (i == 0 || j == 0 || i == filas - 1 || j == columnas - 1) {
+
                 tablero[i][j] = '~';  // Agua en los bordes
             } else {
                 tablero[i][j] = ' ';  // Espacio vacío en el interior
