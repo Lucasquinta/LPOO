@@ -3,15 +3,17 @@
 #include <ctime>
 #include <windows.h>
 
-#define N_MAX 20
+#define N_MAX 20  // Definir el tamaño máximo del tablero
 
 using namespace std;
 
+// Declaración de variables globales
 char tablero[N_MAX][N_MAX];
 int filas = 0, columnas = 0;
 int x_pirata, y_pirata, x_tesoro, y_tesoro;
-int movimiento = 0;  // Movement counter
+int movimiento = 0;  // Contador de movimientos
 
+// Declaración de funciones
 void inicializarTablero();
 void dibujarTablero();
 void BuscarTesoro();
@@ -19,11 +21,12 @@ int generarNumeroAleatorio(int min, int max);
 void setColor(int textColor, int bgColor);
 
 int main() {
-    srand(time(NULL));  // Initialize random number generator
+    srand(time(NULL));  // Inicializar el generador de números aleatorios
     
     int opcion;
     char jugar_nuevamente;
     
+    // Bucle principal del menú
     do {
         cout << "\n--- Menú ---\n";
         cout << "1. Inicializar Tablero\n";
@@ -33,8 +36,10 @@ int main() {
         cout << "Ingrese una opcion: ";
         cin >> opcion;
         
+        // Selección de la opción del menú
         switch (opcion) {
             case 1:
+                // Inicializar el tablero
                 cout << "Teniendo en cuenta que el agua te va a sacar 2 filas y 2 columnas\n";
                 cout << "Ingrese las dimensiones del tablero (maximo " << N_MAX << "): ";
                 cin >> filas;
@@ -43,24 +48,29 @@ int main() {
                 cout << "Tablero inicializado.\n";
                 break;
             case 2:
+                // Dibujar el tablero
                 dibujarTablero();
                 break;
             case 3:
+                // Iniciar la búsqueda del tesoro
                 BuscarTesoro();
                 if (tablero[x_pirata][y_pirata] == 'T') {
+                    // Si el pirata encuentra el tesoro
                     cout << "¡Encontraste el Gran Tesoro!\n";
                     cout << "¿Desea jugar nuevamente? (s/n): ";
                     cin >> jugar_nuevamente;
                     if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
-                        inicializarTablero(); // Restart the game
-                        opcion = 0; // Reset the menu
+                        inicializarTablero(); // Reiniciar el juego
+                        opcion = 0; // Reiniciar el menú
                     }
                 }
                 break;
             case 4:
+                // Salir del programa
                 cout << "Saliendo del programa.\n";
                 break;
             default:
+                // Opción inválida
                 cout << "Opción inválida. Intente nuevamente.\n";
                 break;
         }
@@ -69,31 +79,33 @@ int main() {
     return 0;
 }
 
+// Función para inicializar el tablero
 void inicializarTablero() {
     if (filas <= 4 || filas > N_MAX || columnas <= 4 || columnas > N_MAX) {
+        // Validar dimensiones del tablero
         cout << "Dimensiones inválidas. Deben ser mayores que 4 y menores o iguales a " << N_MAX << ".\n";
         return;
     }
     
-    // Reset movement counter
+    // Reiniciar el contador de movimientos
     movimiento = 0;
 
-    // Fill the board with water
+    // Llenar el tablero con agua
     for (int i = 0; i < filas; i++) {
         for (int j = 0; j < columnas; j++) {
             if (i == 0 || j == 0 || i == filas - 1 || j == columnas - 1) {
-                tablero[i][j] = '~';  // Water on the edges
+                tablero[i][j] = '~';  // Agua en los bordes
             } else {
-                tablero[i][j] = ' ';  // Empty space inside
+                tablero[i][j] = ' ';  // Espacio vacío en el interior
             }
         }
     }
     
-    // Place bridges in the corners
+    // Colocar puentes en las esquinas
     tablero[0][columnas - 1] = ' ';
     tablero[filas - 1][0] = ' ';
     
-    // Place the pirate and the treasure in random positions
+    // Colocar al pirata y al tesoro en posiciones aleatorias
     x_pirata = generarNumeroAleatorio(1, filas - 2);
     y_pirata = generarNumeroAleatorio(1, columnas - 2);
     tablero[x_pirata][y_pirata] = 'P';
@@ -104,54 +116,58 @@ void inicializarTablero() {
     } while (x_tesoro == x_pirata && y_tesoro == y_pirata);
 }
 
+// Función para dibujar el tablero
 void dibujarTablero() {
     cout << "\nGuia del juego:\nEl agua es ~ y el puente es O\n";
-    cout << "Movimientos: " << movimiento << "\n";  // Display movement counter
+    cout << "Movimientos: " << movimiento << "\n";  // Mostrar contador de movimientos
     if (filas <= 0 || filas > N_MAX || columnas <= 0 || columnas > N_MAX) {
         cout << "El tablero no ha sido inicializado correctamente.\n";
         return;
     }
 
+    // Dibujar el tablero
     for (int i = 0; i < filas; i++) {
         for (int j = 0; j < columnas; j++) {
             if (i == x_tesoro && j == y_tesoro) {
-                setColor(14, 14); // Background color sand, text color sand (treasure invisible)
+                setColor(14, 14); // Fondo color arena, texto color arena (tesoro invisible)
                 cout << " ";
             } else {
+                // Configurar colores y mostrar caracteres
                 switch (tablero[i][j]) {
                     case '~':
-                        setColor(11, 1); // Light blue text, blue background
+                        setColor(11, 1); // Texto celeste, fondo azul
                         cout << "~";
                         break;
                     case 'P':
-                        setColor(14, 0); // Yellow text, black background
+                        setColor(14, 0); // Texto amarillo, fondo negro
                         cout << "P";
                         break;
                     case ' ':
                         if ((i == 0 && j == columnas - 1) || (i == filas - 1 && j == 0)) {
-                            setColor(0, 6); // Dark brown background for bridges
+                            setColor(0, 6); // Fondo marrón oscuro para los puentes
                             cout << " ";
                         } else {
-                            setColor(7, 14); // White text, sand background
+                            setColor(7, 14); // Texto blanco, fondo color arena
                             cout << " ";
                         }
                         break;
                     case 'X':
-                        setColor(15, 14); // White text, sand background
+                        setColor(15, 14); // Texto blanco, fondo color arena
                         cout << " ";
                         break;
                     default:
-                        setColor(7, 14); // Default white text, sand background
+                        setColor(7, 14); // Texto blanco (default), fondo color arena
                         cout << tablero[i][j];
                         break;
                 }
             }
-            setColor(7, 0); // Reset to white after each character
+            setColor(7, 0); // Restablecer a blanco después de cada carácter
         }
         cout << "\n";
     }
 }
 
+// Función para buscar el tesoro
 void BuscarTesoro() {
     char direccion;
     
@@ -160,12 +176,14 @@ void BuscarTesoro() {
         return;
     }
     
+    // Bucle para la búsqueda del tesoro
     do {
         cout << "Ingrese la dirección (w, a, s, d): ";
         cin >> direccion;
         
         int dx = 0, dy = 0;
         
+        // Determinar la dirección del movimiento
         switch (direccion) {
             case 'a':
                 dy = -1;
@@ -184,23 +202,23 @@ void BuscarTesoro() {
                 continue;
         }
         
-        // Check if the movement is valid
+        // Verificar si el movimiento es válido
         int nueva_x = x_pirata + dx;
         int nueva_y = y_pirata + dy;
         if (nueva_x >= 0 && nueva_x < filas && nueva_y >= 0 && nueva_y < columnas) {
-            // Clear the previous position of the pirate
+            // Limpiar la posición anterior del pirata
             tablero[x_pirata][y_pirata] = 'X';
-            // Move the pirate to the new position
+            // Mover el pirata a la nueva posición
             x_pirata = nueva_x;
             y_pirata = nueva_y;
-            // Check if the pirate falls into the water
+            // Verificar si el pirata cae en el agua
             if (tablero[x_pirata][y_pirata] == '~') {
                 dibujarTablero();
                 cout << "¡El pirata ha caído al agua y ha muerto!\n";
                 break;
             }
             tablero[x_pirata][y_pirata] = 'P';
-            movimiento++;  // Increment the movement counter
+            movimiento++;  // Incrementar el contador de movimientos
         } else {
             cout << "Movimiento inválido. Intente nuevamente.\n";
             continue;
@@ -208,6 +226,7 @@ void BuscarTesoro() {
         
         dibujarTablero();
         
+        // Verificar si el pirata encuentra el tesoro
         if (tablero[x_pirata][y_pirata] == 'T') {
             cout << "¡Encontraste el Gran Tesoro!\n";
             break;
@@ -216,6 +235,7 @@ void BuscarTesoro() {
             break;
         }
         
+        // Limitar la cantidad de movimientos
         if (movimiento >= 50) {
             cout << "Has alcanzado el límite de movimientos. No has encontrado el tesoro.\n";
             break;
@@ -224,10 +244,12 @@ void BuscarTesoro() {
     } while (true);
 }
 
+// Función para generar un número aleatorio entre un mínimo y un máximo
 int generarNumeroAleatorio(int min, int max) {
     return min + rand() % (max - min + 1);
 }
 
+// Función para cambiar el color del texto y del fondo en la consola
 void setColor(int textColor, int bgColor) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, (bgColor << 4) | textColor);
