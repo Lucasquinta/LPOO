@@ -57,12 +57,6 @@ int main() {
                 if (tablero[x_pirata][y_pirata] == 'T') {
                     // Si el pirata encuentra el tesoro
                     cout << "¡Encontraste el Gran Tesoro!\n";
-                    cout << "¿Desea jugar nuevamente? (s/n): ";
-                    cin >> jugar_nuevamente;
-                    if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
-                        inicializarTablero(); // Reiniciar el juego
-                        opcion = 0; // Reiniciar el menú
-                    }
                 }
                 break;
             case 4:
@@ -74,6 +68,29 @@ int main() {
                 cout << "Opción inválida. Intente nuevamente.\n";
                 break;
         }
+        
+        // Verificar si el juego ha terminado
+        if (opcion == 3 && (tablero[x_pirata][y_pirata] == 'T' || movimiento >= 50 || tablero[x_pirata][y_pirata] == '~')) {
+            // Preguntar al usuario si desea jugar nuevamente
+            if (tablero[x_pirata][y_pirata] == 'T') {
+                cout << "¡Has encontrado el tesoro!\n";
+            } else if (tablero[x_pirata][y_pirata] == '~') {
+                cout << "¡El pirata ha caído al agua y ha muerto!\n";
+            } else if (movimiento >= 50) {
+                cout << "Has alcanzado el límite de movimientos. No has encontrado el tesoro.\n";
+            }
+
+            cout << "¿Desea jugar nuevamente? (s/n): ";
+            cin >> jugar_nuevamente;
+            if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
+                inicializarTablero(); // Reiniciar el juego
+                system("cls"); // Limpiar la pantalla
+                opcion = 0; // Reiniciar el menú
+            } else {
+                opcion = 4; // Salir del programa
+            }
+        }
+        
     } while (opcion != 4);
     
     return 0;
@@ -215,10 +232,18 @@ void BuscarTesoro() {
             if (tablero[x_pirata][y_pirata] == '~') {
                 dibujarTablero();
                 cout << "¡El pirata ha caído al agua y ha muerto!\n";
-                break;
+                cout << "¿Desea jugar nuevamente? (s/n): ";
+                char jugar_nuevamente;
+                cin >> jugar_nuevamente;
+                if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
+                    inicializarTablero(); // Reiniciar el juego
+                    system("cls"); // Limpiar la pantalla
+                    break;
+                } else {
+                    exit(0); // Terminar el programa
+                }
             }
             tablero[x_pirata][y_pirata] = 'P';
-            movimiento++;  // Incrementar el contador de movimientos
         } else {
             cout << "Movimiento inválido. Intente nuevamente.\n";
             continue;
@@ -226,19 +251,36 @@ void BuscarTesoro() {
         
         dibujarTablero();
         
+        movimiento++;  // Incrementar el contador de movimientos
+        
         // Verificar si el pirata encuentra el tesoro
-        if (tablero[x_pirata][y_pirata] == 'T') {
-            cout << "¡Encontraste el Gran Tesoro!\n";
-            break;
-        } else if (tablero[x_pirata][y_pirata] == 'P' && x_pirata == x_tesoro && y_pirata == y_tesoro) {
+        if (tablero[x_pirata][y_pirata] == 'P' && x_pirata == x_tesoro && y_pirata == y_tesoro) {
             cout << "¡Has encontrado el tesoro!\n";
-            break;
+            cout << "¿Desea jugar nuevamente? (s/n): ";
+            char jugar_nuevamente;
+            cin >> jugar_nuevamente;
+            if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
+                inicializarTablero(); // Reiniciar el juego
+                system("cls"); // Limpiar la pantalla
+                break;
+            } else {
+                exit(0); // Terminar el programa
+            }
         }
         
-        // Limitar la cantidad de movimientos
+        // Verificar si se alcanza el límite de movimientos
         if (movimiento >= 50) {
             cout << "Has alcanzado el límite de movimientos. No has encontrado el tesoro.\n";
-            break;
+            cout << "¿Desea jugar nuevamente? (s/n): ";
+            char jugar_nuevamente;
+            cin >> jugar_nuevamente;
+            if (jugar_nuevamente == 's' || jugar_nuevamente == 'S') {
+                inicializarTablero(); // Reiniciar el juego
+                system("cls"); // Limpiar la pantalla
+                break;
+            } else {
+                exit(0); // Terminar el programa
+            }
         }
         
     } while (true);
