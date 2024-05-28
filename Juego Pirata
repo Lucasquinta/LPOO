@@ -28,7 +28,7 @@ int main() {
     
     // Bucle principal del menú
     do {
-        cout << "\n--- Menú ---\n";
+        cout << "\n--- Menu ---\n";
         cout << "1. Inicializar Tablero\n";
         cout << "2. Dibujar Tablero\n";
         cout << "3. Buscar Tesoro\n";
@@ -65,7 +65,7 @@ int main() {
                 break;
             default:
                 // Opción inválida
-                cout << "Opción inválida. Intente nuevamente.\n";
+                cout << "Opcion invalida. Intente nuevamente.\n";
                 break;
         }
         
@@ -75,9 +75,9 @@ int main() {
             if (tablero[x_pirata][y_pirata] == 'T') {
                 cout << "¡Has encontrado el tesoro!\n";
             } else if (tablero[x_pirata][y_pirata] == '~') {
-                cout << "¡El pirata ha caído al agua y ha muerto!\n";
+                cout << "¡El pirata ha caido al agua y ha muerto!\n";
             } else if (movimiento >= 50) {
-                cout << "Has alcanzado el límite de movimientos. No has encontrado el tesoro.\n";
+                cout << "Has alcanzado el limite de movimientos. No has encontrado el tesoro.\n";
             }
 
             cout << "¿Desea jugar nuevamente? (s/n): ";
@@ -100,7 +100,7 @@ int main() {
 void inicializarTablero() {
     if (filas <= 4 || filas > N_MAX || columnas <= 4 || columnas > N_MAX) {
         // Validar dimensiones del tablero
-        cout << "Dimensiones inválidas. Deben ser mayores que 4 y menores o iguales a " << N_MAX << ".\n";
+        cout << "Dimensiones invalidas. Deben ser mayores que 4 y menores o iguales a " << N_MAX << ".\n";
         return;
     }
     
@@ -147,13 +147,13 @@ void dibujarTablero() {
         for (int j = 0; j < columnas; j++) {
             if (i == x_tesoro && j == y_tesoro) {
                 setColor(14, 14); // Fondo color arena, texto color arena (tesoro invisible)
-                cout << " ";
+                cout << "  ";
             } else {
                 // Configurar colores y mostrar caracteres
                 switch (tablero[i][j]) {
                     case '~':
                         setColor(11, 1); // Texto celeste, fondo azul
-                        cout << "~";
+                        cout << " ~";
                         break;
                     case 'P':
                         setColor(14, 0); // Texto amarillo, fondo negro
@@ -162,15 +162,15 @@ void dibujarTablero() {
                     case ' ':
                         if ((i == 0 && j == columnas - 1) || (i == filas - 1 && j == 0)) {
                             setColor(0, 6); // Fondo marrón oscuro para los puentes
-                            cout << " ";
+                            cout << "  ";
                         } else {
                             setColor(7, 14); // Texto blanco, fondo color arena
-                            cout << " ";
+                            cout << "  ";
                         }
                         break;
                     case 'X':
                         setColor(15, 14); // Texto blanco, fondo color arena
-                        cout << " ";
+                        cout << "  ";
                         break;
                     default:
                         setColor(7, 14); // Texto blanco (default), fondo color arena
@@ -215,7 +215,7 @@ void BuscarTesoro() {
                 dx = -1;
                 break;
             default:
-                cout << "Dirección inválida. Intente nuevamente.\n";
+                cout << "Direccion invalida. Intente nuevamente.\n";
                 continue;
         }
         
@@ -231,7 +231,7 @@ void BuscarTesoro() {
             // Verificar si el pirata cae en el agua
             if (tablero[x_pirata][y_pirata] == '~') {
                 dibujarTablero();
-                cout << "¡El pirata ha caído al agua y ha muerto!\n";
+                cout << "¡El pirata ha caido al agua y ha muerto!\n";
                 cout << "¿Desea jugar nuevamente? (s/n): ";
                 char jugar_nuevamente;
                 cin >> jugar_nuevamente;
@@ -245,7 +245,7 @@ void BuscarTesoro() {
             }
             tablero[x_pirata][y_pirata] = 'P';
         } else {
-            cout << "Movimiento inválido. Intente nuevamente.\n";
+            cout << "Movimiento invalido. Intente nuevamente.\n";
             continue;
         }
         
@@ -270,7 +270,7 @@ void BuscarTesoro() {
         
         // Verificar si se alcanza el límite de movimientos
         if (movimiento >= 50) {
-            cout << "Has alcanzado el límite de movimientos. No has encontrado el tesoro.\n";
+            cout << "Has alcanzado el limite de movimientos. No has encontrado el tesoro.\n";
             cout << "¿Desea jugar nuevamente? (s/n): ";
             char jugar_nuevamente;
             cin >> jugar_nuevamente;
