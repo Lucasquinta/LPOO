@@ -1,0 +1,19 @@
+#include <stdio.h>
+
+int main() {
+    int a, b, c;
+
+    printf("Ternas pitagóricas donde los lados no son mayores de 500:\n");
+
+    for (a = 1; a <= 500; a++) {
+        for (b = a; b <= 500; b++) { // Empieza en 'a' para evitar duplicados (a, b, c) y (b, a, c)
+            for (c = b; c <= 500; c++) { // Empieza en 'b' para mantener el orden y evitar duplicados
+                if (a * a + b * b == c * c) {
+                    printf("(%d, %d, %d)\n", a, b, c);
+                }
+            }
+        }
+    }
+
+    return 0;
+}
