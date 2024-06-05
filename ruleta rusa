@@ -1,0 +1,47 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+int main() {
+    srand(time(0)); // Semilla para generar números aleatorios
+
+    int bala = rand() % 6 + 1; // Colocamos la bala en un lugar aleatorio entre 1 y 6
+    int turno = 1; // Indica el turno del jugador (1 para el usuario, 2 para el programa)
+
+    cout << "¡Bienvenido al juego de la ruleta rusa!" << endl;
+
+    while (true) {
+        if (turno == 1) {
+            cout << "Es tu turno. Presiona 1 para dispararte o 2 para pasar el turno: ";
+            int opcion;
+            cin >> opcion;
+
+            if (opcion == 1) {
+                if (bala == 1) {
+                    cout << "¡Has perdido! Disparaste a la bala." << endl;
+                    break;
+                } else {
+                    cout << "¡Sobreviviste! Ahora es el turno del programa." << endl;
+                }
+            } else if (opcion == 2) {
+                cout << "Has pasado el turno. Ahora es el turno del programa." << endl;
+            } else {
+                cout << "Opción inválida. Por favor, selecciona 1 o 2." << endl;
+            }
+        } else {
+            int disparoPrograma = rand() % 6 + 1;
+            if (disparoPrograma == bala) {
+                cout << "¡Has ganado! El programa disparó a la bala." << endl;
+                break;
+            } else {
+                cout << "El programa ha pasado el turno." << endl;
+            }
+        }
+
+        turno = (turno == 1) ? 2 : 1; // Cambiar el turno al otro jugador
+    }
+
+    return 0;
+}
