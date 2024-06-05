@@ -1,0 +1,185 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <windows.h>
+
+const int N = 10;
+const int NUM_POZOS = 20; // Número de pozos que se agregarán a la matriz
+const int MAX_VIDAS = 3;
+
+void establecerColor(int fondo, int texto) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, (fondo << 4) | texto);
+}
+
+void establecerCursor(int x, int y) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD cursorPos = { (SHORT)x, (SHORT)y };
+    SetConsoleCursorPosition(hConsole, cursorPos);
+}
+
+void generarMatrizConPozos(std::vector<std::vector<int> >& matriz) {
+    int pozos_colocados = 0;
+    while (pozos_colocados < NUM_POZOS) {
+        int fila = rand() % N;
+        int columna = rand() % N;
+        if ((fila == 0 && columna == 0) || (fila == 0 && columna == 1) || 
+            (fila == 1 && columna == 0) || (fila == 8 && columna == 9) || 
+            (fila == 9 && columna == 8) || (fila == N-1 && columna == N-1)) {
+            continue; // Evitar pozos en las posiciones críticas
+        }
+        if (matriz[fila][columna] == 1) {
+            matriz[fila][columna] = 0;
+            pozos_colocados++;
+        }
+    }
+}
+
+void imprimirMatriz(const std::vector<std::vector<int> >& matriz, int fila_jugador, int columna_jugador, const std::string& mensaje) {
+    establecerCursor(0, 2); // Mover el cursor debajo del mensaje de bienvenida
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (i == fila_jugador && j == columna_jugador) {
+                establecerColor(14, 0); // Fondo amarillo para el jugador, texto negro
+                std::cout << "P ";
+            } else if (i == N-1 && j == N-1) {
+                establecerColor(4, 7); // Fondo rojo para la posición final, texto blanco
+                std::cout << "  "; // Espacio vacío para representar la posición final
+            } else if (matriz[i][j] == 0) {
+                establecerColor(8, 7); // Fondo gris oscuro para los pozos, texto blanco
+                std::cout << "  "; // Espacio vacío para representar el pozo
+            } else {
+                establecerColor(6, 7); // Fondo marrón claro para el piso, texto blanco
+                std::cout << "  "; // Espacio vacío para representar el piso
+            }
+        }
+        std::cout << std::endl;
+    }
+    establecerCursor(0, N + 4); // Mover el cursor debajo de la matriz
+    std::cout << mensaje << std::endl; // Imprimir el mensaje
+    establecerColor(0, 7); // Resetear el color al color original
+}
+
+bool moverse(int& fila, int& columna, char direccion, int& vidas, std::string& mensaje) {
+    switch (direccion) {
+        case 'w': // Moverse hacia arriba
+            if (fila > 0) fila--;
+            break;
+        case 's': // Moverse hacia abajo
+            if (fila < N-1) fila++;
+            break;
+        case 'a': // Moverse hacia la izquierda
+            if (columna > 0) columna--;
+            break;
+        case 'd': // Moverse hacia la derecha
+            if (columna < N-1) columna++;
+            break;
+        default:
+            mensaje = "Movimiento inválido!";
+            return false;
+    }
+    return true;
+}
+
+bool jugarDeNuevo() {
+    char respuesta;
+    std::cout << "¿Quieres jugar de nuevo? (s/n): ";
+    std::cin >> respuesta;
+    return (respuesta == 's' || respuesta == 'S');
+}
+
+void limpiarPantalla() {
+    // Limpiar pantalla y mover el cursor al inicio
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coordScreen = { 0, 0 };
+    DWORD cCharsWritten;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    DWORD dwConSize;
+
+    // Obtener el tamaño de la consola
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+        return;
+    }
+    dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
+
+    // Llenar la consola con espacios en blanco
+    if (!FillConsoleOutputCharacter(hConsole, (TCHAR)' ', dwConSize, coordScreen, &cCharsWritten)) {
+        return;
+    }
+
+    // Establecer los atributos de texto
+    if (!FillConsoleOutputAttribute(hConsole, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten)) {
+        return;
+    }
+
+    // Mover el cursor al inicio
+    SetConsoleCursorPosition(hConsole, coordScreen);
+}
+
+int main() {
+    srand(time(0));
+
+    bool continuar_jugando = true;
+    while (continuar_jugando) {
+        std::vector<std::vector<int> > matriz(N, std::vector<int>(N, 1));
+        generarMatrizConPozos(matriz);
+
+        int fila = 0, columna = 0;
+        int vidas = MAX_VIDAS;
+        std::string mensaje = "";
+
+        // Imprimir el mensaje de bienvenida
+        establecerCursor(0, 0);
+        std::cout << "Bienvenido al juego. Debes llegar a la posicion (9,9) sin perder tus 3 vidas." << std::endl;
+
+        while (fila != N-1 || columna != N-1) {
+            limpiarPantalla(); // Limpiar la pantalla
+            // Reimprimir el mensaje de bienvenida
+            establecerCursor(0, 0);
+            std::cout << "Bienvenido al juego. Debes llegar a la posicion (9,9) sin perder tus 3 vidas." << std::endl;
+            
+            // Imprimir vidas restantes y la matriz
+            establecerCursor(0, 1);
+            std::cout << "Vidas restantes: " << vidas << std::endl;
+            imprimirMatriz(matriz, fila, columna, mensaje);
+
+            std::cout << "Ingresa direccion (w: arriba, s: abajo, a: izquierda, d: derecha): ";
+            char direccion;
+            std::cin >> direccion;
+
+            int fila_previa = fila;
+            int columna_previa = columna;
+
+            if (moverse(fila, columna, direccion, vidas, mensaje)) {
+                if (matriz[fila][columna] == 0) {
+                    vidas--;
+                    mensaje = "Caiste en un pozo! Perdiste una vida.";
+                    fila = fila_previa;
+                    columna = columna_previa;
+                    if (vidas == 0) {
+                        mensaje = "Has perdido todas tus vidas. Juego terminado.";
+                        break;
+                    }
+                } else {
+                    mensaje = "Movimiento exitoso.";
+                }
+            } else {
+                mensaje = "Movimiento inválido!";
+                fila = fila_previa;
+                columna = columna_previa;
+            }
+        }
+
+        if (vidas > 0 && fila == N-1 && columna == N-1) {
+            limpiarPantalla(); // Limpiar la pantalla
+            establecerCursor(0, 0);
+            std::cout << "Felicitaciones! Has llegado a la posicion (9,9) con " << vidas << " vidas restantes." << std::endl;
+            imprimirMatriz(matriz, fila, columna, mensaje);
+        }
+
+        continuar_jugando = jugarDeNuevo();
+    }
+
+    return 0;
+}
