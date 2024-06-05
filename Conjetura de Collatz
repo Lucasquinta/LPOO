@@ -1,0 +1,34 @@
+#include <stdio.h>
+main()
+{
+	int N, dw=0;
+	float num, poi;
+	do{
+	printf("ingrese un numero: ");
+	scanf("%f", & num);
+
+	N=num;
+	if(N==1){
+		printf("%d ",N);
+		return 0;
+	}
+	if(num>0 && N==num){
+		do{
+			poi= N % 2;
+			if(poi==0){
+				N=N/2;
+				printf("%d ",N);
+			}
+			else if(poi!=0){
+				N=(N*3)+1;
+				printf("%d ",N);
+			}
+		}while(N>1);
+	return 0;	
+	}
+	else{
+		printf("El numero ingresado es invalido.\n");
+		dw=1;
+	}
+	}while(dw==1);
+}
