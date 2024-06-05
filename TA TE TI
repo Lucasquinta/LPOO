@@ -1,0 +1,246 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <ctype.h>
+
+#define SIZE 3
+
+void inicializarTablero(char tablero[SIZE][SIZE]);
+void imprimirTablero(char tablero[SIZE][SIZE]);
+int hayGanador(char tablero[SIZE][SIZE]);
+int esEmpate(char tablero[SIZE][SIZE]);
+int validarMovimiento(char tablero[SIZE][SIZE], int fila, int columna);
+void realizarMovimiento(char tablero[SIZE][SIZE], int fila, int columna, char simbolo);
+void movimientoComputadora(char tablero[SIZE][SIZE], char computadoraSimbolo, char jugadorSimbolo);
+int obtenerEnteroValido(const char* mensaje);
+
+int main() {
+    char tablero[SIZE][SIZE];
+    int fila, columna;
+    char jugadorSimbolo, computadoraSimbolo;
+    char jugarDeNuevo;
+    
+    srand(time(NULL));
+    
+    do {
+        inicializarTablero(tablero);
+        
+        do {
+            printf("Elija su simbolo (X/O): ");
+            scanf(" %c", &jugadorSimbolo);
+            jugadorSimbolo = toupper(jugadorSimbolo);
+            if (jugadorSimbolo != 'X' && jugadorSimbolo != 'O') {
+                printf("El simbolo que estas ingresando es incorrecto. Por favor, elige 'X' o 'O'.\n");
+            }
+        } while (jugadorSimbolo != 'X' && jugadorSimbolo != 'O');
+        
+        computadoraSimbolo = (jugadorSimbolo == 'X') ? 'O' : 'X';
+        
+        while (1) {
+            imprimirTablero(tablero);
+            printf("Turno del jugador %c\n", jugadorSimbolo);
+            
+            do {
+                fila = obtenerEnteroValido("Ingrese la fila (1-3): ");
+                columna = obtenerEnteroValido("Ingrese la columna (1-3): ");
+                fila--;  // Ajustar índice para que sea 0-based
+                columna--;  // Ajustar índice para que sea 0-based
+            } while (!validarMovimiento(tablero, fila, columna));
+            
+            realizarMovimiento(tablero, fila, columna, jugadorSimbolo);
+            
+            if (hayGanador(tablero)) {
+                imprimirTablero(tablero);
+                printf("Jugador %c gana!\n", jugadorSimbolo);
+                break;
+            } else if (esEmpate(tablero)) {
+                imprimirTablero(tablero);
+                printf("Es un empate!\n");
+                break;
+            }
+            
+            movimientoComputadora(tablero, computadoraSimbolo, jugadorSimbolo);
+            
+            if (hayGanador(tablero)) {
+                imprimirTablero(tablero);
+                printf("Computadora %c gana!\n", computadoraSimbolo);
+                break;
+            } else if (esEmpate(tablero)) {
+                imprimirTablero(tablero);
+                printf("Es un empate!\n");
+                break;
+            }
+        }
+        
+        printf("¿Quieres jugar de nuevo? (S/N): ");
+        scanf(" %c", &jugarDeNuevo);
+        jugarDeNuevo = toupper(jugarDeNuevo);
+        
+        if(jugarDeNuevo == 'S'){
+            system("cls"); // Limpia la pantalla
+        }
+    } while (jugarDeNuevo == 'S');
+    
+    return 0;
+}
+
+void inicializarTablero(char tablero[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            tablero[i][j] = ' ';
+        }
+    }
+}
+
+void imprimirTablero(char tablero[SIZE][SIZE]) {
+    printf("  ");
+    for (int i = 1; i <= SIZE; i++) {
+        printf(" %d ", i);
+    }
+    printf("\n");
+    for (int i = 0; i < SIZE; i++) {
+        printf("%d ", i + 1);
+        for (int j = 0; j < SIZE; j++) {
+            printf(" %c ", tablero[i][j]);
+            if (j < SIZE - 1) {
+                printf("|");
+            }
+        }
+        printf("\n");
+        if (i < SIZE - 1) {
+            printf("  ");
+            for (int k = 0; k < SIZE; k++) {
+                printf("---");
+                if (k < SIZE - 1) {
+                    printf("+");
+                }
+            }
+            printf("\n");
+        }
+    }
+}
+
+int hayGanador(char tablero[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        if (tablero[i][0] == tablero[i][1] && tablero[i][1] == tablero[i][2] && tablero[i][0] != ' ') {
+            return 1;
+        }
+        if (tablero[0][i] == tablero[1][i] && tablero[1][i] == tablero[2][i] && tablero[0][i] != ' ') {
+            return 1;
+        }
+    }
+    if (tablero[0][0] == tablero[1][1] && tablero[1][1] == tablero[2][2] && tablero[0][0] != ' ') {
+        return 1;
+    }
+    if (tablero[0][2] == tablero[1][1] && tablero[1][1] == tablero[2][0] && tablero[0][2] != ' ') {
+        return 1;
+    }
+    return 0;
+}
+
+int esEmpate(char tablero[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (tablero[i][j] == ' ') {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+int validarMovimiento(char tablero[SIZE][SIZE], int fila, int columna) {
+    if (fila < 0 || fila >= SIZE || columna < 0 || columna >= SIZE) {
+        printf("Movimiento invalido. Fuera de limites.\n");
+        return 0;
+    }
+    if (tablero[fila][columna] != ' ') {
+        printf("Movimiento invalido. La posición ya esta ocupada.\n");
+        return 0;
+    }
+    return 1;
+}
+
+void realizarMovimiento(char tablero[SIZE][SIZE], int fila, int columna, char simbolo) {
+    tablero[fila][columna] = simbolo;
+}
+
+int puedeGanar(char tablero[SIZE][SIZE], char simbolo, int *fila, int *columna) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (tablero[i][j] == ' ') {
+                tablero[i][j] = simbolo;
+                if (hayGanador(tablero)) {
+                    tablero[i][j] = ' ';
+                    *fila = i;
+                    *columna = j;
+                    return 1;
+                }
+                tablero[i][j] = ' ';
+            }
+        }
+    }
+    return 0;
+}
+
+void movimientoComputadora(char tablero[SIZE][SIZE], char computadoraSimbolo, char jugadorSimbolo) {
+    int fila, columna;
+    
+    // Estrategia mixta para nivel medio de dificultad
+    int randomChoice = rand() % 4;
+
+    if (randomChoice == 0) {
+        // 25% de probabilidad de hacer un movimiento aleatorio
+        do {
+            fila = rand() % SIZE;
+            columna = rand() % SIZE;
+        } while (tablero[fila][columna] != ' ');
+        realizarMovimiento(tablero, fila, columna, computadoraSimbolo);
+        printf("La computadora pone su %c en la fila %d, columna %d\n", computadoraSimbolo, fila + 1, columna + 1);
+    } else {
+        // 75% de probabilidad de seguir una estrategia más inteligente
+        if (puedeGanar(tablero, computadoraSimbolo, &fila, &columna)) {
+            realizarMovimiento(tablero, fila, columna, computadoraSimbolo);
+            return;
+        }
+        
+        if (puedeGanar(tablero, jugadorSimbolo, &fila, &columna)) {
+            realizarMovimiento(tablero, fila, columna, computadoraSimbolo);
+            return;
+        }
+        
+        if (tablero[1][1] == ' ') {
+            realizarMovimiento(tablero, 1, 1, computadoraSimbolo);
+            return;
+        }
+        
+        int esquinas[4][2] = {{0, 0}, {0, 2}, {2, 0}, {2, 2}};
+        for (int i = 0; i < 4; i++) {
+            if (tablero[esquinas[i][0]][esquinas[i][1]] == ' ') {
+                realizarMovimiento(tablero, esquinas[i][0], esquinas[i][1], computadoraSimbolo);
+                return;
+            }
+        }
+        
+        do {
+            fila = rand() % SIZE;
+            columna = rand() % SIZE;
+        } while (tablero[fila][columna] != ' ');
+        realizarMovimiento(tablero, fila, columna, computadoraSimbolo);
+        printf("La computadora pone su %c en la fila %d, columna %d\n", computadoraSimbolo, fila + 1, columna + 1);
+    }
+}
+
+int obtenerEnteroValido(const char* mensaje) {
+    char entrada[10];
+    int numero;
+    while (1) {
+        printf("%s", mensaje);
+        scanf("%s", entrada);
+        if (sscanf(entrada, "%d", &numero) != 1 || numero < 1 || numero > 3) {
+            printf("Opcion invalida. Por favor, ingrese un numero entero entre 1 y 3.\n");
+        } else {
+            return numero;
+        }
+    }
+}
