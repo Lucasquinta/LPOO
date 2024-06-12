@@ -1,0 +1,154 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
+using namespace std;
+
+#define UNASSIGNED 0
+#define N 9
+
+bool isSafe(int grid[N][N], int row, int col, int num) {
+    for (int x = 0; x < N; x++)
+        if (grid[row][x] == num || grid[x][col] == num)
+            return false;
+
+    int startRow = row - row % 3, startCol = col - col % 3;
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            if (grid[i + startRow][j + startCol] == num)
+                return false;
+
+    return true;
+}
+
+bool solveSudoku(int grid[N][N], int row, int col) {
+    if (row == N - 1 && col == N)
+        return true;
+    if (col == N) {
+        row++;
+        col = 0;
+    }
+    if (grid[row][col] != UNASSIGNED)
+        return solveSudoku(grid, row, col + 1);
+
+    for (int num = 1; num <= 9; num++) {
+        if (isSafe(grid, row, col, num)) {
+            grid[row][col] = num;
+            if (solveSudoku(grid, row, col + 1))
+                return true;
+        }
+        grid[row][col] = UNASSIGNED;
+    }
+    return false;
+}
+
+void printGrid(int grid[N][N]) {
+    for (int row = 0; row < N; row++) {
+        for (int col = 0; col < N; col++) {
+            if (col == 3 || col == 6)
+                cout << " | ";
+            cout << (grid[row][col] == UNASSIGNED ? "_" : to_string(grid[row][col])) << " ";
+        }
+        if (row == 2 || row == 5) {
+            cout << endl;
+            for (int i = 0; i < N; i++)
+                cout << "---";
+        }
+        cout << endl;
+    }
+}
+
+void fillDiagonal(int grid[N][N]) {
+    for (int i = 0; i < N; i += 3) {
+        bool nums[N + 1] = { false };
+        for (int j = 0; j < 3; j++) {
+            for (int k = 0; k < 3; k++) {
+                int num;
+                do {
+                    num = rand() % 9 + 1;
+                } while (nums[num]);
+                nums[num] = true;
+                grid[i + j][i + k] = num;
+            }
+        }
+    }
+}
+
+void removeElements(int grid[N][N], int count) {
+    while (count) {
+        int cellId = rand() % (N * N);
+        int row = cellId / N;
+        int col = cellId % N;
+        if (grid[row][col] != UNASSIGNED) {
+            grid[row][col] = UNASSIGNED;
+            count--;
+        }
+    }
+}
+
+bool isComplete(int grid[N][N]) {
+    for (int row = 0; row < N; row++) {
+        for (int col = 0; col < N; col++) {
+            if (grid[row][col] == UNASSIGNED) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void clearScreen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+void customSleep(int seconds) {
+#ifdef _WIN32
+    Sleep(seconds * 1000); // Sleep takes milliseconds
+#else
+    sleep(seconds); // sleep takes seconds
+#endif
+}
+
+int main() {
+    srand(time(0));
+    int grid[N][N] = { { 0 } };
+
+    fillDiagonal(grid);
+    solveSudoku(grid, 0, 0);
+    removeElements(grid, 40);
+
+    while (!isComplete(grid)) {
+        clearScreen();
+        printGrid(grid);
+        int row, col, num;
+        cout << "Ingrese la fila (1-9), columna (1-9) y el numero (1-9) a colocar: ";
+        cin >> row >> col >> num;
+        row--; col--; // Ajustar a índice de matriz 0-based
+        if (row >= 0 && row < N && col >= 0 && col < N && num >= 1 && num <= 9) {
+            if (grid[row][col] == UNASSIGNED && isSafe(grid, row, col, num)) {
+                grid[row][col] = num;
+            } else {
+                cout << "Movimiento no válido. Intente de nuevo." << endl;
+                customSleep(2); // Pausa para mostrar el mensaje
+            }
+        } else {
+            cout << "Entrada no válida. Intente de nuevo." << endl;
+            customSleep(2); // Pausa para mostrar el mensaje
+        }
+    }
+
+    clearScreen();
+    cout << "¡Felicidades! Ha completado el Sudoku." << endl;
+    printGrid(grid);
+
+    return 0;
+}
