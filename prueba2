@@ -1,0 +1,149 @@
+//Quintanilla Lucas Nahuel
+//La evaluacion esta realizada en DEV
+//windows.h funciona solo en el dev
+#include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+
+#define RED 12
+#define CELESTE 11
+#define WHITE 15
+
+void color(int tcolor){ //funcion de color de windows.h
+	HANDLE hconsole = GetStdHandle (STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute (hconsole, tcolor);
+}
+
+void viandas( int cant, int vianda){ //funcion viandas
+	int precio, op, costo, r1, r2, r3, r4;
+	if(vianda==1){
+		precio=2000;//precio de la vianda
+		costo= precio*cant;//calcula el precio total
+		r1= r1+costo;//calcula la suma de todos los precios totales para saber la recaudacion
+	}else if(vianda==2){
+		precio=1000;
+		costo= precio*cant;	
+		r2=r2+costo;
+	}else if(vianda==3){
+		precio=1500;
+		costo= precio*cant;	
+		r3=r3+costo;
+	}else if(vianda==4){
+		precio=1000;
+		costo= precio*cant;	
+		r4=r4+costo;
+	}
+}
+
+
+
+void operadores(int op, int costo){
+	int operadores[7],cant, n=7, v1=0,v2=0,v3=0,v4=0,v5=0,v6=0,v7=0;
+	int c1=0,c2=0,c3=0,c4=0,c5=0,c6=0,c7=0;
+	if(op==1){//separa los operadores
+		v1= v1 + costo;
+		c1= c1+cant;
+	}else if(op==2){
+		v2= v2 + costo;
+		c2=c2+cant;
+	}else if(op==3){
+		v3= v3 + costo;
+		c3=c3+cant;
+	}else if(op==4){
+		v4= v4 + costo;
+		c4=c4+cant;
+	}else if(op==5){
+		v5= v5 + costo;
+		c5=c5+cant;
+	}else if(op==6){
+		v6= v6 + costo;
+		c6=c6+cant;
+	}else if(op==7){
+		v7= v7 + costo;
+		c7=c7+cant;
+	}
+}
+
+void impviandas(int vianda){
+	int r1,r2,r3,r4;
+	if(vianda==1){
+		color(RED);
+		printf("La vianda de carne genero %d pesos de ganancias", r1);
+		color(WHITE);
+	}else if(vianda==2){
+		color(RED);
+		printf("La vianda de vegetales genero %d pesos de ganancias",r2);
+		color(WHITE);
+	}else if(vianda==3){
+		color(RED);
+		printf("La vianda de pescado genero %d pesos de ganancias", r3);
+		color(WHITE);
+	}else if(vianda==4){
+		color(RED);
+		printf("La vianda de fruta genero %d pesos de ganancias", r4);
+		color(WHITE);
+	}
+}
+
+void impoperadores(int op){
+	int c1,c2,c3,c4,c5,c6,c7;
+	if(op==1){
+		printf("vendio %d viandas", c1);
+	}else if(op==2){
+		printf("vendio %d viandas", c2);
+	}else if(op==3){
+		printf("vendio %d viandas", c3);
+	}else if(op==4){
+		printf("vendio %d viandas", c4);
+	}else if(op==5){
+		printf("vendio %d viandas", c5);
+	}else if(op==6){
+		printf("vendio %d viandas", c6);
+	}else if(op==7){
+		printf("vendio %d viandas", c7);
+	}
+}
+
+int main(){
+	int op, vianda, costo, cant, cont=0;
+	do{
+		
+		printf("Ingrese con que operador desea hablar :\n");
+		color(CELESTE);
+		printf("(van desde el 1 al 7) (0 para finalizar): ");
+		scanf("%d", & op);
+		color(WHITE);
+		system("cls");
+		if(op>=1 && op<=7){
+			printf("ingrese que vianda desea.\n");
+			printf("1.Carne   2.Vegetales\n3.Pescado   4.Frutas\n");
+			scanf("%d", & vianda);
+			system("cls");
+			printf("Ingrese cuantas unidades desea: ");
+			scanf("%d", & cant);
+			if(cant>4){
+				cont=cont+1;
+			}
+			system("cls");	
+			viandas(cant,vianda);
+			operadores(op, costo);
+		}
+		else if(op>=8){
+			color(RED);
+			printf("El numero es incorrecto.\n");
+			color(WHITE);
+			printf("Ingrese con que operador desea hablar :\n");
+			color(CELESTE);
+			printf("(van desde el 1 al 7) (0 para finalizar): ");
+			scanf("%d", & op);
+			color(WHITE);
+			system("cls");
+		}
+		
+	}while(op!=0);
+	color(RED);
+	printf(" %d ventas superaron las 4 unidades ", cont);
+	color(WHITE);
+	impviandas(vianda);
+	impoperadores(op);
+}
