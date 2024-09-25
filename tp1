@@ -1,0 +1,130 @@
+package ejercicios;
+
+import java.util.Scanner;
+
+public class tp1 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int opcion;
+
+        do {
+            System.out.println("Seleccione una opción:");
+            System.out.println("1. Números del 1 al 100 e informar si son pares");
+            System.out.println("2. Números del 50 al 100 e informar si son primos");
+            System.out.println("3. Pedir números hasta que uno sea mayor a 100 y primo");
+            System.out.println("4. Calculadora");
+            System.out.println("5. Ejemplo de for-each");
+            System.out.println("0. Salir");
+            System.out.print("Opción: ");
+            opcion = scanner.nextInt();
+
+            switch (opcion) {
+                case 1:
+                    ejercicio1();
+                    break;
+                case 2:
+                    ejercicio2();
+                    break;
+                case 3:
+                    ejercicio3();
+                    break;
+                case 4:
+                    calculadora();
+                    break;
+                case 5:
+                    ejemploForEach();
+                    break;
+                case 0:
+                    System.out.println("fin");
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+            }
+        } while (opcion != 0);
+    }
+
+    public static void ejercicio1() {
+        for (int i = 1; i <= 100; i++) {
+            if (i % 2 == 0) {
+                System.out.println(i + " es par.");
+            }
+        }
+    }
+
+    public static void ejercicio2() {
+        for (int i = 50; i <= 100; i++) {
+            if (esPrimo(i)) {
+                System.out.println(i + " es primo.");
+            } else {
+                System.out.print(i + " no es primo. Sus divisores son: ");
+                for (int j = 1; j <= i; j++) {
+                    if (i % j == 0) {
+                        System.out.print(j + " ");
+                    }
+                }
+                System.out.println();
+            }
+        }
+    }
+
+    public static void ejercicio3() {
+        Scanner scanner = new Scanner(System.in);
+        int numero;
+
+        while (true) {
+            System.out.print("Introduce un número: ");
+            numero = scanner.nextInt();
+            if (numero > 100 && esPrimo(numero)) {
+                System.out.println("Has ingresado un número primo mayor a 100: " + numero);
+                break;
+            }
+        }
+    }
+
+    public static void calculadora() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Introduce el primer número: ");
+        double num1 = scanner.nextDouble();
+        System.out.print("Introduce el segundo número: ");
+        double num2 = scanner.nextDouble();
+        System.out.print("Introduce la operación (+, -, *, /): ");
+        char operacion = scanner.next().charAt(0);
+
+        switch (operacion) {
+            case '+':
+                System.out.println("Resultado: " + (num1 + num2));
+                break;
+            case '-':
+                System.out.println("Resultado: " + (num1 - num2));
+                break;
+            case '*':
+                System.out.println("Resultado: " + (num1 * num2));
+                break;
+            case '/':
+                if (num2 != 0) {
+                    System.out.println("Resultado: " + (num1 / num2));
+                } else {
+                    System.out.println("Error: División por cero.");
+                }
+                break;
+            default:
+                System.out.println("Operación no válida.");
+                break;
+        }
+    }
+
+    public static void ejemploForEach() {
+        String[] frutas = {"Manzana", "Banana", "Naranja", "Uva"};
+        for (String fruta : frutas) {
+            System.out.println("Fruta: " + fruta);
+        }
+    }
+
+    public static boolean esPrimo(int num) {
+        if (num <= 1) return false;
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) return false;
+        }
+        return true;
+    }
+}
